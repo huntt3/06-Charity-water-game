@@ -44,7 +44,6 @@ Composite.add(world, ball);
 // Walls
 const walls = [
     Bodies.rectangle(200, 0, 400, 20, { isStatic: true }), // top
-    /*Bodies.rectangle(200, 400, 400, 20, { isStatic: true }),*/ // bottom
     Bodies.rectangle(0, 200, 20, 400, { isStatic: true }), // left
     Bodies.rectangle(400, 200, 20, 400, { isStatic: true }) // right
 ];
@@ -84,6 +83,7 @@ const rightHinge = Constraint.create({
     length: 0
 });
 Composite.add(world, [rightFlipper, rightHinge]);
+
 
 // Make flippers static until game starts
 Body.setAngularVelocity(leftFlipper, 0);
@@ -137,27 +137,6 @@ Events.on(engine, 'afterUpdate', function() {
         Body.setAngularVelocity(rightFlipper, 0);
     }
 });
-
-// Add mouse drag functionality for the ball using Matter.js MouseConstraint
-// Create a mouse object for the renderer
-const mouse = Mouse.create(render.canvas);
-
-// Create a mouse constraint that only allows dragging the ball
-const mouseConstraint = MouseConstraint.create(engine, {
-    mouse: mouse,
-    constraint: {
-        stiffness: 0.2,
-        render: { visible: false }
-    },
-    // Only allow the ball to be draggable
-    collisionFilter: {
-        mask: ball.collisionFilter.category
-    }
-});
-Composite.add(world, mouseConstraint);
-
-// Keep the mouse in sync with rendering
-render.mouse = mouse;
 
 // Add the water can as a static sensor body in the center
 const waterCan = Bodies.rectangle(300, 200, 40, 40, {
