@@ -180,7 +180,7 @@ function showCongratulationsModal() {
     // Pause physics
     Runner.stop(runner);
     // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('congratsModal'));
+    const modal = new bootstrap.Modal(document.getElementById('congratsModal'), { backdrop: 'static', keyboard: true });
     modal.show();
     // Trigger confetti
     if (window.confetti) {
@@ -207,7 +207,7 @@ Events.on(engine, 'afterUpdate', function() {
         ball.position.y < -30 || ball.position.y > 430
     )) {
         Runner.stop(runner);
-        const modal = new bootstrap.Modal(document.getElementById('failureModal'));
+        const modal = new bootstrap.Modal(document.getElementById('failureModal'), { backdrop: 'static', keyboard: true });
         modal.show();
         goalReached = true;
     }
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (pauseBtnTop) {
     pauseBtnTop.addEventListener('click', function() {
       Runner.stop(runner);
-      const modal = new bootstrap.Modal(document.getElementById('pauseModal'));
+      const modal = new bootstrap.Modal(document.getElementById('pauseModal'), { backdrop: 'static', keyboard: true });
       modal.show();
     });
   }
@@ -302,8 +302,8 @@ if (pauseModalEl) {
 const instructionsBtn = document.getElementById('instructions-btn-top');
 if (instructionsBtn) {
   instructionsBtn.addEventListener('click', function() {
-    const modal = new bootstrap.Modal(document.getElementById('instructionsModal'));
-    modal.show();
+    const instructionsModal = new bootstrap.Modal(instructionsModalEl, { backdrop: 'static', keyboard: true });
+    instructionsModal.show();
   });
 }
 
