@@ -32,7 +32,6 @@ Render.run(render);
 
 // Create runner
 const runner = Runner.create();
-Runner.run(runner, engine);
 
 // Ball bearing
 const ball = Bodies.circle(130, 60, 16, {
@@ -232,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Resume physics
     Runner.run(runner, engine);
     // Hide all modals if open
-    ['congratsModal', 'pauseModal', 'failureModal'].forEach(id => {
+    ['congratsModal', 'pauseModal', 'failureModal', 'instructionsModal'].forEach(id => {
       const modalEl = document.getElementById(id);
       if (modalEl) {
         const modal = bootstrap.Modal.getInstance(modalEl);
@@ -280,7 +279,22 @@ if (instructionsModalEl) {
     Runner.stop(runner);
   });
   instructionsModalEl.addEventListener('hidden.bs.modal', function() {
-    Runner.run(runner, engine);
+    if(!runner.enabled){
+      Runner.run(runner, engine);
+    }
+  });
+}
+
+// Pause physics engine while pauseModal is open, resume when closed
+const pauseModalEl = document.getElementById('pauseModal');
+if (pauseModalEl) {
+  pauseModalEl.addEventListener('show.bs.modal', function() {
+    Runner.stop(runner);
+  });
+  pauseModalEl.addEventListener('hidden.bs.modal', function() {
+    if(!runner.enabled){
+      Runner.run(runner, engine);
+    }
   });
 }
 
@@ -292,3 +306,10 @@ if (instructionsBtn) {
     modal.show();
   });
 }
+
+// Ensure physics resumes when any .btn-close is clicked (for accessibility and mobile)
+document.querySelectorAll('.btn-close').forEach(btn => {
+  btn.addEventListener('click', function() {
+    Runner.run(runner, engine);
+  });
+});

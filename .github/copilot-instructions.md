@@ -19,3 +19,5 @@ We use CSS for styling, avoiding inline styles in HTML.
 We use responsive design principles to ensure the game works well on different screen sizes.
 We use CSS Flexbox or Grid for layout to create responsive designs.
 We ensure the game is playable on both desktop and mobile devices.
+
+We use object oriented programming design to create modular code.
