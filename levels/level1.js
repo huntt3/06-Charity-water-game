@@ -13,6 +13,12 @@ const Events = Matter.Events;
 const Mouse = Matter.Mouse;
 const MouseConstraint = Matter.MouseConstraint;
 
+// Import OOP game objects
+//import LeftFlipper from '../gameObjects/leftFlipper.js';
+//import RightFlipper from '../gameObjects/rightFlipper.js';
+//import Wall from '../gameObjects/wall.js';
+//import Ramp from '../gameObjects/ramp.js';
+
 // Create engine and world
 const engine = Engine.create();
 const world = engine.world;
@@ -40,49 +46,86 @@ const ball = Bodies.circle(130, 60, 16, {
 });
 Composite.add(world, ball);
 
-// Walls
-const walls = [
-    Bodies.rectangle(200, 0, 400, 20, { isStatic: true }), // top
-    Bodies.rectangle(0, 200, 20, 400, { isStatic: true }), // left
-    Bodies.rectangle(400, 200, 20, 400, { isStatic: true }) // right
-];
-Composite.add(world, walls);
+// Wall class for modular OOP
+class Wall {
+  constructor(x, y, width, height, world, Matter) {
+    this.body = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true });
+    Matter.Composite.add(world, this.body);
+  }
+}
+
+// LeftFlipper class for modular OOP
+class LeftFlipper {
+  constructor(x, y, length, width, world, Matter) {
+    this.body = Matter.Bodies.rectangle(x, y, length, width, {
+      isStatic: false,
+      chamfer: { radius: 8 },
+      render: { fillStyle: '#F16061' }
+    });
+    this.hinge = Matter.Constraint.create({
+      bodyA: this.body,
+      pointB: { x: x - length/2 + 5, y: y },
+      pointA: { x: -length/2 + 5, y: 0 },
+      stiffness: 1,
+      length: 0
+    });
+    Matter.Composite.add(world, [this.body, this.hinge]);
+    Matter.Body.setAngularVelocity(this.body, 0);
+    Matter.Body.setDensity(this.body, 0.1);
+    this.body.restitution = 0.25;
+  }
+}
+
+// RightFlipper class for modular OOP
+class RightFlipper {
+  constructor(x, y, length, width, world, Matter) {
+    this.body = Matter.Bodies.rectangle(x, y, length, width, {
+      isStatic: false,
+      chamfer: { radius: 8 },
+      render: { fillStyle: '#F16061' }
+    });
+    this.hinge = Matter.Constraint.create({
+      bodyA: this.body,
+      pointB: { x: x + length/2 - 5, y: y },
+      pointA: { x: length/2 - 5, y: 0 },
+      stiffness: 1,
+      length: 0
+    });
+    Matter.Composite.add(world, [this.body, this.hinge]);
+    Matter.Body.setAngularVelocity(this.body, 0);
+    Matter.Body.setDensity(this.body, 0.1);
+    this.body.restitution = 0.25;
+  }
+}
+
+// Ramp class for modular OOP
+class Ramp {
+  constructor(x, y, width, height, angle, color, world, Matter) {
+    this.body = Matter.Bodies.rectangle(x, y, width, height, {
+      isStatic: true,
+      angle: angle,
+      chamfer: { radius: 8 },
+      render: { fillStyle: color }
+    });
+    Matter.Composite.add(world, this.body);
+  }
+}
+
+// Create walls using Wall class
+const wallTop = new Wall(200, 0, 400, 20, world, Matter);
+const wallLeft = new Wall(0, 200, 20, 400, world, Matter);
+const wallRight = new Wall(400, 200, 20, 400, world, Matter);
 
 // Flipper properties
 const flipperLength = 70;
 const flipperWidth = 16;
 const flipperY = 340;
 
-// Left flipper
-const leftFlipper = Bodies.rectangle(120, flipperY, flipperLength, flipperWidth, {
-    isStatic: false,
-    chamfer: { radius: 8 },
-    render: { fillStyle: '#F16061' }
-});
-const leftHinge = Constraint.create({
-    bodyA: leftFlipper,
-    pointB: { x: 85, y: flipperY },
-    pointA: { x: -flipperLength/2 + 5, y: 0 },
-    stiffness: 1,
-    length: 0
-});
-Composite.add(world, [leftFlipper, leftHinge]);
-
-// Right flipper
-const rightFlipper = Bodies.rectangle(280, flipperY, flipperLength, flipperWidth, {
-    isStatic: false,
-    chamfer: { radius: 8 },
-    render: { fillStyle: '#F16061' }
-});
-const rightHinge = Constraint.create({
-    bodyA: rightFlipper,
-    pointB: { x: 315, y: flipperY },
-    pointA: { x: flipperLength/2 - 5, y: 0 },
-    stiffness: 1,
-    length: 0
-});
-Composite.add(world, [rightFlipper, rightHinge]);
-
+// Create flippers using OOP classes
+const leftFlipperObj = new LeftFlipper(120, flipperY, flipperLength, flipperWidth, world, Matter);
+const rightFlipperObj = new RightFlipper(280, flipperY, flipperLength, flipperWidth, world, Matter);
+const leftFlipper = leftFlipperObj.body;
+const rightFlipper = rightFlipperObj.body;
 
 // Make flippers static until game starts
 Body.setAngularVelocity(leftFlipper, 0);
@@ -145,20 +188,9 @@ const waterCan = Bodies.rectangle(300, 200, 40, 40, {
 });
 Composite.add(world, waterCan);
 
-// Add end ramps as static bodies for collision, sloping toward the flippers
-const rampEndLeft = Bodies.rectangle(40, 250, 100, 16, {
-    isStatic: true,
-    angle: Math.PI / 3, // ~36 degrees
-    chamfer: { radius: 8 },
-    render: { fillStyle: '#4FCB53' }
-});
-const rampEndRight = Bodies.rectangle(360, 250, 100, 16, {
-    isStatic: true,
-    angle: -Math.PI / 3, // ~-36 degrees
-    chamfer: { radius: 8 },
-    render: { fillStyle: '#4FCB53' }
-});
-Composite.add(world, [rampEndLeft, rampEndRight]);
+// Create ramps using Ramp class
+const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#4FCB53', world, Matter);
+const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#4FCB53', world, Matter);
 
 // Increase flipper density and restitution to improve collision reliability
 Body.setDensity(leftFlipper, 0.1); // higher density
