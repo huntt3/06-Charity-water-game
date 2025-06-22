@@ -92,6 +92,14 @@
           <a href="https://www.charitywater.org/donate" class="index-btn" target="_blank" rel="noopener noreferrer">Donate to Charity: Water</a>
         </div>
     </div>
-  <script src="script.js"></script>
+    <script src="./functionality/music.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.startMusic) {
+          window.startMusic();
+        }
+      });
+    </script>
+    <script src="./functionality/linkHover.js"></script>
 </body>
 </html>

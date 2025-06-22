@@ -98,8 +98,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     <script src="./level1.js"></script>
     <script src="../functionality/drag.js"></script>
-    <audio id="waterDrop1" src="../sounds/waterDrop1Alex_Jauk.wav" preload="auto" aria-label="Water drop sound 1"></audio>
-    <audio id="waterDrop2" src="../sounds/waterDrop2Alex_Jauk.wav" preload="auto" aria-label="Water drop sound 2"></audio>
-    <audio id="waterDrop3" src="../sounds/waterDrop3Alex_Jauk.wav" preload="auto" aria-label="Water drop sound 3"></audio>
+    <script src="../functionality/linkHover.js"></script>
+    <script src="../functionality/music.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.startMusic) {
+          window.startMusic();
+        }
+      });
+    </script>
 </body>
 </html>
