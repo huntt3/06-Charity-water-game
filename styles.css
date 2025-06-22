@@ -227,3 +227,31 @@ body {
 .modal-title {
   font-size: 3em;
 }
+
+/* Style for volume sliders in pause modal */
+#music-volume.form-range, #sfx-volume.form-range {
+  accent-color: var(--charity-water-yellow);
+}
+
+/* For browsers that do not support accent-color, use custom styles: */
+#music-volume::-webkit-slider-thumb, #sfx-volume::-webkit-slider-thumb {
+  background: var(--charity-water-yellow);
+}
+#music-volume::-moz-range-thumb, #sfx-volume::-moz-range-thumb {
+  background: var(--charity-water-yellow);
+}
+#music-volume::-ms-thumb, #sfx-volume::-ms-thumb {
+  background: var(--charity-water-yellow);
+}
+#music-volume::-webkit-slider-runnable-track, #sfx-volume::-webkit-slider-runnable-track {
+  background: var(--charity-water-yellow);
+}
+#music-volume::-moz-range-track, #sfx-volume::-moz-range-track {
+  background: var(--charity-water-yellow);
+}
+#music-volume::-ms-fill-lower, #sfx-volume::-ms-fill-lower {
+  background: var(--charity-water-yellow);
+}
+#music-volume::-ms-fill-upper, #sfx-volume::-ms-fill-upper {
+  background: var(--charity-water-yellow);
+}
