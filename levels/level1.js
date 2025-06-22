@@ -5,6 +5,7 @@
 //Matter.js
 //Bootstrap
 //Alex_Jauk | Water Drops Splashing | https://pixabay.com/sound-effects/water-drops-splashing-228918/
+//Universfield | Water Splash | https://pixabay.com/sound-effects/water-splash-199583/
 
 
 
@@ -183,9 +184,39 @@ function showCongratulationsModal() {
     }
 }
 
+// --- Water Drop Sound Logic ---
+// Get audio elements for the three water drop sounds
+const waterDropSounds = [
+  drop1 = new Audio('../sounds/waterDrop1Alex_Jauk.wav'),
+  drop2 = new Audio('../sounds/waterDrop2Alex_Jauk.wav'),
+  drop3 = new Audio('../sounds/waterDrop3Alex_Jauk.wav')
+];
+
+// Variable to track when a sound can be played again
+let canPlaySound = true;
+
+// Function to play a random water drop sound
+const playRandomWaterDropSound = () => {
+    if(canPlaySound){
+      // Pick a random sound
+      const randomIndex = Math.floor(Math.random() * waterDropSounds.length);
+      const sound = waterDropSounds[randomIndex];
+      // Reset sound to start and play
+      sound.currentTime = 0;
+      sound.play();
+      // Prevent another sound for 0.3 seconds
+      canPlaySound = false;
+      setTimeout(() => {
+        canPlaySound = true;
+      }, 300);
+  }
+}
+
+
 // Only trigger once
 let goalReached = false;
 Events.on(engine, 'collisionStart', function(event) {
+    playRandomWaterDropSound();
     if (goalReached) return;
     for (const pair of event.pairs) {
         if ((pair.bodyA === ball && pair.bodyB === waterCan) || (pair.bodyB === ball && pair.bodyA === waterCan)) {
@@ -193,6 +224,8 @@ Events.on(engine, 'collisionStart', function(event) {
             // Pause physics
             Runner.stop(runner);
             showCongratulationsModal();
+            splash = new Audio('../sounds/waterSplashUniversfield.wav')
+            splash.play();
         }
     }
 });
