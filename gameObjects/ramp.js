@@ -1,5 +1,5 @@
 // Ramp class for modular OOP
-class Ramp {
+export default class Ramp {
   constructor(x, y, width, height, angle, color, world, Matter) {
     this.body = Matter.Bodies.rectangle(x, y, width, height, {
       isStatic: true,
@@ -10,4 +10,3 @@ class Ramp {
     Matter.Composite.add(world, this.body);
   }
 }
-export default Ramp;

@@ -20,4 +20,9 @@ We use responsive design principles to ensure the game works well on different s
 We use CSS Flexbox or Grid for layout to create responsive designs.
 We ensure the game is playable on both desktop and mobile devices.
 
-We use object oriented programming design to create modular code.
+We use object oriented programming design to create modular code. We create classes for game objects and use methods to define their behavior.
+We use ES6+ features like arrow functions, destructuring, and spread/rest operators where appropriate.
+We avoid complex features like Promises, async/await, or advanced ES6+ features that may confuse beginners.
+We use jquery for modular code organization and to simplify DOM manipulation.
+
+
