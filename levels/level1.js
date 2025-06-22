@@ -13,12 +13,6 @@ const Events = Matter.Events;
 const Mouse = Matter.Mouse;
 const MouseConstraint = Matter.MouseConstraint;
 
-// Import OOP game objects
-//import LeftFlipper from '../gameObjects/leftFlipper.js';
-//import RightFlipper from '../gameObjects/rightFlipper.js';
-//import Wall from '../gameObjects/wall.js';
-//import Ramp from '../gameObjects/ramp.js';
-
 // Create engine and world
 const engine = Engine.create();
 const world = engine.world;
@@ -41,7 +35,7 @@ const runner = Runner.create();
 
 // Ball bearing
 const ball = Bodies.circle(130, 60, 16, {
-    restitution: 0.8,
+    restitution: 0.45,
     render: { fillStyle: 'deepskyblue' }
 });
 Composite.add(world, ball);
@@ -111,26 +105,6 @@ class Ramp {
   }
 }
 
-// Create walls using Wall class
-const wallTop = new Wall(200, 0, 400, 20, world, Matter);
-const wallLeft = new Wall(0, 200, 20, 400, world, Matter);
-const wallRight = new Wall(400, 200, 20, 400, world, Matter);
-
-// Flipper properties
-const flipperLength = 70;
-const flipperWidth = 16;
-const flipperY = 340;
-
-// Create flippers using OOP classes
-const leftFlipperObj = new LeftFlipper(120, flipperY, flipperLength, flipperWidth, world, Matter);
-const rightFlipperObj = new RightFlipper(280, flipperY, flipperLength, flipperWidth, world, Matter);
-const leftFlipper = leftFlipperObj.body;
-const rightFlipper = rightFlipperObj.body;
-
-// Make flippers static until game starts
-Body.setAngularVelocity(leftFlipper, 0);
-Body.setAngularVelocity(rightFlipper, 0);
-
 // Flipper control
 let flipping = false;
 document.addEventListener('keydown', (e) => {
@@ -188,29 +162,8 @@ const waterCan = Bodies.rectangle(300, 200, 40, 40, {
 });
 Composite.add(world, waterCan);
 
-// Create ramps using Ramp class
-const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#4FCB53', world, Matter);
-const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#4FCB53', world, Matter);
-
-// Increase flipper density and restitution to improve collision reliability
-Body.setDensity(leftFlipper, 0.1); // higher density
-Body.setDensity(rightFlipper, 0.1);
-leftFlipper.restitution = .25;
-rightFlipper.restitution = .25;
-
-// Improve collision detection by increasing the simulation's constraint iterations and time step
-engine.positionIterations = 12; // default is 6
-engine.velocityIterations = 12; // default is 4
-engine.constraintIterations = 6; // default is 2
-engine.timing.timeScale = 1;
-
-// Optionally, make the ball slightly less bouncy to help with stability
-ball.restitution = 0.45;
-
 // Helper to open the modal and trigger confetti
 function showCongratulationsModal() {
-    // Pause physics
-    Runner.stop(runner);
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('congratsModal'), { backdrop: 'static', keyboard: true });
     modal.show();
@@ -227,6 +180,8 @@ Events.on(engine, 'collisionStart', function(event) {
     for (const pair of event.pairs) {
         if ((pair.bodyA === ball && pair.bodyB === waterCan) || (pair.bodyB === ball && pair.bodyA === waterCan)) {
             goalReached = true;
+            // Pause physics
+            Runner.stop(runner);
             showCongratulationsModal();
         }
     }
@@ -345,3 +300,42 @@ document.querySelectorAll('.btn-close').forEach(btn => {
     Runner.run(runner, engine);
   });
 });
+
+
+
+
+
+
+
+
+
+
+// Create walls using Wall class
+const wallTop = new Wall(200, 0, 400, 20, world, Matter);
+const wallLeft = new Wall(0, 200, 20, 400, world, Matter);
+const wallRight = new Wall(400, 200, 20, 400, world, Matter);
+
+// Flipper properties
+const flipperLength = 70;
+const flipperWidth = 16;
+const flipperY = 340;
+
+// Create flippers using OOP classes
+const leftFlipperObj = new LeftFlipper(120, flipperY, flipperLength, flipperWidth, world, Matter);
+const rightFlipperObj = new RightFlipper(280, flipperY, flipperLength, flipperWidth, world, Matter);
+const leftFlipper = leftFlipperObj.body;
+const rightFlipper = rightFlipperObj.body;
+
+// Make flippers static until game starts
+Body.setAngularVelocity(leftFlipper, 0);
+Body.setAngularVelocity(rightFlipper, 0);
+
+// Create ramps using Ramp class
+const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#4FCB53', world, Matter);
+const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#4FCB53', world, Matter);
+
+// Improve collision detection by increasing the simulation's constraint iterations and time step
+engine.positionIterations = 12; // default is 6
+engine.velocityIterations = 12; // default is 4
+engine.constraintIterations = 6; // default is 2
+engine.timing.timeScale = 1;
