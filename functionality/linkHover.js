@@ -15,6 +15,27 @@ const waterDropSounds = [
 
 let canPlaySound = true;
 
+// Track SFX volume globally
+let sfxVolume = 1;
+
+// Helper to update SFX volume for all water drop sounds
+function setSFXVolume(vol) {
+  sfxVolume = vol;
+  waterDropSounds.forEach(snd => { if (snd) snd.volume = vol; });
+}
+// Update waterDropSounds and SFX volume after DOM is loaded
+// and allow external scripts to call setSFXVolume
+window.setSFXVolume = setSFXVolume;
+document.addEventListener('DOMContentLoaded', () => {
+  sfxSounds = [
+    document.getElementById('waterDrop1'),
+    document.getElementById('waterDrop2'),
+    document.getElementById('waterDrop3'),
+    document.getElementById()
+  ];
+  setSFXVolume(sfxVolume);
+});
+
 // Function to play a random water drop sound
 const playRandomWaterDropSound = () => {
     if(canPlaySound){
@@ -45,3 +66,49 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 playRandomWaterDropSound();
+
+// --- Volume Controls for Pause Modal ---
+document.addEventListener('DOMContentLoaded', function() {
+  // Music volume slider
+  const musicSlider = document.getElementById('music-volume');
+  const musicIcon = document.getElementById('music-icon');
+  // SFX volume slider
+  const sfxSlider = document.getElementById('sfx-volume');
+  const sfxIcon = document.getElementById('sfx-icon');
+  // Music audio (from global music.js)
+  const music = window._charityWaterMusic;
+  // Water splash SFX (if you have one, add its element here)
+  const waterSplash = document.getElementById('waterSplash');
+  // Helper to set SFX volume
+  function setSFXVolume(vol) {
+    waterDropSounds.forEach(snd => { if (snd) snd.volume = vol; });
+    waterSplash.volume = vol;
+  }
+  // Update music volume and icon
+  musicSlider.addEventListener('input', function() {
+    if (music) music.volume = parseFloat(this.value);
+    if (this.value == '0') {
+      musicIcon.textContent = 'music_off';
+    } else {
+      musicIcon.textContent = 'music_note';
+    }
+  });
+  // Update SFX volume and icon
+  sfxSlider.addEventListener('input', function() {
+    if (window.setSFXVolume) window.setSFXVolume(parseFloat(this.value));
+    if (this.value == '0') {
+      sfxIcon.textContent = 'volume_off';
+    } else {
+      sfxIcon.textContent = 'volume_up';
+    }
+  });
+  // Set initial volumes
+  if (music) music.volume = parseFloat(musicSlider.value);
+  if (window.setSFXVolume) window.setSFXVolume(parseFloat(sfxSlider.value));
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.startMusic) {
+    window.startMusic();
+  }
+});
