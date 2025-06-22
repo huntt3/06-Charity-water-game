@@ -223,3 +223,7 @@ body {
 .modal-content {
   opacity: 0.8;
 }
+
+.modal-title {
+  font-size: 3em;
+}
