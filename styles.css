@@ -7,7 +7,7 @@ Fonts:
 */
 @font-face {
     font-family: local('AvenirLTStd-Medium');
-    src: url('./fonts/AvenirLTStd-Medium.otf') format('opentype');
+    src: url("./fonts/AvenirLTStd-Medium.otf") format('opentype');
 }
 
 :root {
@@ -36,7 +36,11 @@ Fonts:
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'AvenirLTStd-Medium', Georgia, 'Times New Roman', Times, serif Arial, Helvetica, sans-serif;
+    font-family: Georgia, 'Times New Roman', Times, serif Arial, Helvetica, sans-serif;
+}
+
+html, body, * {
+    font-family: Georgia, serif;
 }
 
 body {
@@ -62,8 +66,6 @@ body {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    /*width: 800px;
-    height: 600px;*/
     border-radius: 8px;
     position: relative;
     overflow: hidden;

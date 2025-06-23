@@ -23,7 +23,7 @@
     </div>
 
     <!-- Congratulations Modal -->
-    <div class="modal fade" id="congratsModal" tabindex="-1" aria-labelledby="congratsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="congratsModal" tabindex="-1" aria-labelledby="congratsModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header border-0">
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Pause Modal -->
-    <div class="modal fade" id="pauseModal" tabindex="-1" aria-labelledby="pauseModalLabel" aria-hidden="true">
+    <div class="modal fade" id="pauseModal" tabindex="-1" aria-labelledby="pauseModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header border-0">
@@ -88,7 +88,7 @@
     </div>
 
     <!-- Failure Modal -->
-    <div class="modal fade" id="failureModal" tabindex="-1" aria-labelledby="failureModalLabel" aria-hidden="true">
+    <div class="modal fade" id="failureModal" tabindex="-1" aria-labelledby="failureModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header border-0">
@@ -107,7 +107,7 @@
     </div>
 
     <!-- Instructions Modal -->
-    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header border-0">
@@ -140,5 +140,16 @@
     <script src="../functionality/soundMusicControls.js"></script>
     <script src="../functionality/music.js"></script>
     <script src="../functionality/difficulty.js"></script>
+    <script>
+    // Prevent closing modals with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        setTimeout(function (){            
+          const pauseModal = new bootstrap.Modal(pauseModalEl, { backdrop: 'static', keyboard: true });
+          pauseModal.show();
+        }, 100);
+      }
+    });
+    </script>
 </body>
 </html>

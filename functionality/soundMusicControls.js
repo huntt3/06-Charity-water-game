@@ -95,17 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   // Update SFX volume and icon
-  sfxSlider.addEventListener('input', function() {
-    if (window.setSFXVolume) window.setSFXVolume(parseFloat(this.value));
-    if (this.value == '0') {
+  function updateSfxIcon() {
+    sfxIcon.className = 'material-symbols-outlined';
+    if (sfxSlider.value === '0' || parseFloat(sfxSlider.value) === 0) {
       sfxIcon.textContent = 'volume_off';
     } else {
       sfxIcon.textContent = 'volume_up';
     }
+  }
+  sfxSlider.addEventListener('input', function() {
+    if (window.setSFXVolume) window.setSFXVolume(parseFloat(this.value));
+    updateSfxIcon();
   });
-  // Set initial volumes
+  sfxSlider.addEventListener('change', updateSfxIcon);
+  // Set initial volumes and icon state
   if (music) music.volume = parseFloat(musicSlider.value);
   if (window.setSFXVolume) window.setSFXVolume(parseFloat(sfxSlider.value));
+  updateSfxIcon();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
