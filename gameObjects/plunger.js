@@ -17,33 +17,26 @@ class Plunger {
     this.retractSpeed = 2; // Pixels per frame
     this.springPower = 0;
     this.maxSpringPower = 18; // Max launch force
-    // Create the plunger body
+    // Create the plunger body as a dynamic body
     this.body = Matter.Bodies.rectangle(x, y, width, height, {
-      isStatic: true,
+      isStatic: false, // Dynamic so collisions work
+      inertia: Infinity, // Prevent rotation
+      friction: 1,
+      frictionStatic: 1,
+      frictionAir: 0.05,
       render: { fillStyle: '#1976D2' },
       label: 'plunger'
     });
-    Matter.Composite.add(world, this.body);
-    // Create a DOM element for the plunger for accessibility and visibility
-    this.domElement = document.createElement('div');
-    this.domElement.className = 'plunger';
-    this.domElement.setAttribute('role', 'region');
-    this.domElement.setAttribute('aria-label', 'Pinball plunger');
-    // Ensure a game area container exists for the DOM plunger
-    let gameArea = document.getElementById('game-area');
-    if (!gameArea) {
-      gameArea = document.createElement('main');
-      gameArea.id = 'game-area';
-      gameArea.setAttribute('tabindex', '0');
-      gameArea.setAttribute('aria-label', 'Pinball game area');
-      document.body.appendChild(gameArea);
-    }
-    // Add to the game area (assumes a container with id 'game-area' exists)
-    gameArea.appendChild(this.domElement);
+    // Constrain the plunger to only move vertically (like a pinball spring)
+    this.constraint = Matter.Constraint.create({
+      bodyA: this.body,
+      pointB: { x: x, y: y },
+      length: 0,
+      stiffness: 1
+    });
+    Matter.Composite.add(world, [this.body, this.constraint]);
     // Listen for spacebar events
     this._addEventListeners();
-    // Start syncing DOM with physics
-    this._updateDomPosition();
   }
 
   _addEventListeners() {
@@ -64,37 +57,16 @@ class Plunger {
     });
   }
 
-  _updateDomPosition() {
-    // Sync the DOM element with the Matter.js body position
-    // Assumes the game area is 400x400 and uses absolute positioning
-    this.domElement.style.position = 'absolute';
-    this.domElement.style.width = `${this.width}px`;
-    this.domElement.style.height = `${this.height}px`;
-    this.domElement.style.left = `${this.body.position.x - this.width / 2}px`;
-    this.domElement.style.top = `${this.body.position.y - this.height / 2}px`;
-    this.domElement.style.background = '#1976D2';
-    this.domElement.style.borderRadius = '6px';
-    this.domElement.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
-    this.domElement.style.zIndex = '2';
-    // Responsive: scale for mobile
-    this.domElement.style.maxWidth = '10vw';
-    this.domElement.style.maxHeight = '20vh';
-    requestAnimationFrame(() => this._updateDomPosition());
-  }
-
   _retract() {
     // Retract the plunger while space is held
     if (!this.isRetracting) return;
-    // Move plunger down by retractSpeed, up to maxRetract
     const { Body } = this.Matter;
+    // Only allow the plunger to move down to maxRetract
     if (this.body.position.y < this.y + this.maxRetract) {
-      Body.setPosition(this.body, {
-        x: this.body.position.x,
-        y: this.body.position.y + this.retractSpeed
-      });
+      // Apply a downward force to retract
+      Body.applyForce(this.body, this.body.position, { x: 0, y: 0.02 });
       // Increase spring power (capped)
       this.springPower = Math.min(this.springPower + 0.4, this.maxSpringPower);
-      // Keep retracting next frame
       requestAnimationFrame(() => this._retract());
     }
   }
@@ -116,8 +88,7 @@ class Plunger {
   }
 
   _resetPlunger() {
-    // Move plunger back to original position
-    const { Body } = this.Matter;
-    Body.setPosition(this.body, { x: this.x, y: this.y });
+    // Let the constraint pull the plunger back to its original position
+    // No need to manually set position
   }
 }

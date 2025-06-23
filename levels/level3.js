@@ -7,7 +7,7 @@
 //lofidreams99 | Rainy Lofi City | https://pixabay.com/music/beats-rainy-lofi-city-lofi-music-332746/
 
 // Ball bearing
-const ball = Bodies.circle(130, 60, 16, {
+const ball = Bodies.circle(365, 300, 16, {
     restitution: 0.45,
     render: { fillStyle: 'deepskyblue' }
 });
@@ -36,6 +36,7 @@ if (instructionsModalEl) {
 const wallTop = new Wall(200, 0, 400, 20, world, Matter);
 const wallLeft = new Wall(0, 200, 20, 400, world, Matter);
 const wallRight = new Wall(400, 200, 20, 400, world, Matter);
+const wallMiddle = new Wall(335, 300, 10, 200, world, Matter);
 
 const bumperTopLeft = new Bumper(100, 100, 16, world, Matter);
 bumperTopLeft.body.restitution = 1.2; // Very bouncy
@@ -45,7 +46,7 @@ bumperMiddle.body.restitution = 1.2; // Very bouncy
 
 // Add a plunger in the bottom right corner by the right wall
 // Plunger is a vertical rectangle that launches the ball when space is released
-const plunger = new Plunger(380, 370, 16, 48, world, Matter, ball);
+const plunger = new Plunger(370, 370, 30, 48, world, Matter, ball);
 
 // Flipper properties
 const flipperLength = 70;
@@ -64,4 +65,4 @@ Body.setAngularVelocity(rightFlipper, 0);
 
 // Create ramps using Ramp class
 const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#BBDEB2', world, Matter);
-const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#BBDEB2', world, Matter);
+//const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#BBDEB2', world, Matter);
