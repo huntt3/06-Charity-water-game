@@ -260,3 +260,17 @@ body {
 #music-volume::-ms-fill-upper, #sfx-volume::-ms-fill-upper {
   background: var(--charity-water-yellow);
 }
+
+/* Difficulty switch color styling */
+#difficulty-switch.form-check-input {
+  background-color: var(--charity-water-green);
+  border-color: var(--charity-water-green);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+#difficulty-switch.form-check-input:checked {
+  background-color: var(--charity-water-red);
+  border-color: var(--charity-water-red);
+}
+#difficulty-switch.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(79,203,83,0.25);
+}
