@@ -4,7 +4,7 @@ class RightFlipper {
     this.body = Matter.Bodies.rectangle(x, y, length, width, {
       isStatic: false,
       chamfer: { radius: 8 },
-      render: { fillStyle: '#F16061' }
+      render: { fillStyle: '#3A6766' }
     });
     this.hinge = Matter.Constraint.create({
       bodyA: this.body,

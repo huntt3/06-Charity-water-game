@@ -10,29 +10,33 @@ function setCookie(name, value, days = 365) {
   document.cookie = `${name}=${value}; expires=${expires}; path=/`;
 }
 
-// Show the correct star and save result in cookie
+// Show the correct star(s) and save result in cookie
 function showLevel1Star() {
   const star1 = document.getElementById('star1');
   const star2 = document.getElementById('star2');
   const difficultySwitch = document.getElementById('difficulty-switch');
+  let val = getCookie('level1star') || '';
   if (difficultySwitch && difficultySwitch.checked) {
     // Hard mode
+    if (!val.includes('2')) val += '2';
     if (star2) star2.style.visibility = 'visible';
-    setCookie('level1star', '2');
   } else {
     // Easy mode
+    if (!val.includes('1')) val += '1';
     if (star1) star1.style.visibility = 'visible';
-    setCookie('level1star', '1');
   }
+  // Sort and deduplicate
+  val = Array.from(new Set(val.split(''))).sort().join('');
+  setCookie('level1star', val);
 }
 
-// On page load, show star if cookie exists
+// On page load, show star(s) if cookie exists
 window.addEventListener('DOMContentLoaded', function() {
   const star1 = document.getElementById('star1');
   const star2 = document.getElementById('star2');
-  const val = getCookie('level1star');
-  if (val === '1' && star1) star1.style.visibility = 'visible';
-  if (val === '2' && star2) star2.style.visibility = 'visible';
+  const val = getCookie('level1star') || '';
+  if (val.includes('1') && star1) star1.style.visibility = 'visible';
+  if (val.includes('2') && star2) star2.style.visibility = 'visible';
 });
 
 // Helper to open the modal and trigger confetti

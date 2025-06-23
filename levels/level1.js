@@ -53,8 +53,8 @@ Body.setAngularVelocity(leftFlipper, 0);
 Body.setAngularVelocity(rightFlipper, 0);
 
 // Create ramps using Ramp class
-const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#4FCB53', world, Matter);
-const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#4FCB53', world, Matter);
+const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#BBDEB2', world, Matter);
+const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#BBDEB2', world, Matter);
 
 // Listen for difficulty toggle and resize waterCanObj
 function setWaterCanDifficulty(isHard) {
