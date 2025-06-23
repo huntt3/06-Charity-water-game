@@ -36,13 +36,13 @@ if (instructionsModalEl) {
 const wallTop = new Wall(200, 0, 400, 20, world, Matter);
 const wallLeft = new Wall(0, 200, 20, 400, world, Matter);
 const wallRight = new Wall(400, 200, 20, 400, world, Matter);
-/*
-const bumperMiddle = Bodies.circle(200, 200, 16, {
-    restitution: 0.9,
-    render: { fillStyle: 'deepskyblue' }
-});
-Composite.add(world, bumperMiddle);
-*/
+
+const bumperTopLeft = new Bumper(100, 100, 16, world, Matter);
+bumperTopLeft.body.restitution = 1.2; // Very bouncy
+
+const bumperMiddle = new Bumper(200, 200, 16, world, Matter);
+bumperMiddle.body.restitution = 1.2; // Very bouncy
+
 // Flipper properties
 const flipperLength = 70;
 const flipperWidth = 16;

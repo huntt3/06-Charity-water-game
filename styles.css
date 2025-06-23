@@ -224,6 +224,8 @@ body {
   transform: rotate(-35deg);
 }
 
+
+
 /* Make only the modal background 50% opacity, not the modal content */
 .modal-content {
   opacity: 0.8;
