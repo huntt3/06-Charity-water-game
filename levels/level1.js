@@ -55,3 +55,57 @@ Body.setAngularVelocity(rightFlipper, 0);
 // Create ramps using Ramp class
 const rampEndLeftObj = new Ramp(40, 250, 100, 16, Math.PI / 3, '#4FCB53', world, Matter);
 const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#4FCB53', world, Matter);
+
+// Listen for difficulty toggle and resize waterCanObj
+function setWaterCanDifficulty(isHard) {
+  // Remove old body from world
+  Composite.remove(world, waterCanObj.body);
+  // Set new size (hard = half, easy = normal)
+  let size = isHard ? 40 : 20;
+  // Get current position of the can
+  const pos = waterCanObj.body.position;
+  // Create new body at the same position
+  const newBody = Matter.Bodies.rectangle(pos.x, pos.y, size, size, {
+    isStatic: true,
+    isSensor: true,
+    render: {
+      sprite: {
+        texture: '../img/water-can-transparent.png',
+        xScale: size === 40 ? 0.1 : 0.2, // 4/40 = 0.1, 4/20 = 0.2
+        yScale: size === 40 ? 0.1 : 0.2
+      }
+    }
+  });
+  waterCanObj.body = newBody;
+  // Update global reference for collision
+  window.waterCan = newBody;
+  // Add new body to world
+  Composite.add(world, newBody);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const difficultySwitch = document.getElementById('difficulty-switch');
+  if (difficultySwitch) {
+    difficultySwitch.addEventListener('change', function() {
+      setWaterCanDifficulty(this.checked);
+    });
+    // Set initial state
+    setWaterCanDifficulty(difficultySwitch.checked);
+  }
+});
+
+// Make sure to always use window.waterCan in collision checks
+Events.on(engine, 'collisionStart', function(event) {
+    playRandomWaterDropSound();
+    if (goalReached) return;
+    for (const pair of event.pairs) {
+        if ((pair.bodyA === ball && pair.bodyB === window.waterCan) || (pair.bodyB === ball && pair.bodyA === window.waterCan)) {
+            goalReached = true;
+            // Pause physics
+            Runner.stop(runner);
+            showCongratulationsModal();
+            splash = new Audio('../sounds/waterSplashUniversfield.wav')
+            splash.play();
+        }
+    }
+});
