@@ -50,55 +50,6 @@ const ball = Bodies.circle(130, 60, 16, {
 });
 Composite.add(world, ball);
 
-// Flipper control
-let flipping = false;
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        flipping = true;
-    }
-});
-document.addEventListener('keyup', (e) => {
-    if (e.code === 'Space') {
-        flipping = false;
-    }
-});
-
-// Update flipper angles in the engine's beforeUpdate event
-Events.on(engine, 'beforeUpdate', function() {
-    // Left flipper: rotate up to -35deg, down to 0deg
-    if (flipping) {
-        Body.setAngularVelocity(leftFlipper, -0.25);
-        Body.setAngularVelocity(rightFlipper, 0.25);
-    } else {
-        Body.setAngularVelocity(leftFlipper, 0.15);
-        Body.setAngularVelocity(rightFlipper, -0.15);
-    }
-});
-
-// Keep flippers within angle limits
-Events.on(engine, 'afterUpdate', function() {
-    // Left flipper
-    const minLeft = -Math.PI/4; // -45deg
-    const maxLeft = 0;
-    if (leftFlipper.angle < minLeft) {
-        Body.setAngle(leftFlipper, minLeft);
-        Body.setAngularVelocity(leftFlipper, 0);
-    } else if (leftFlipper.angle > maxLeft) {
-        Body.setAngle(leftFlipper, maxLeft);
-        Body.setAngularVelocity(leftFlipper, 0);
-    }
-    // Right flipper
-    const maxRight = Math.PI/4; // 45deg
-    const minRight = 0;
-    if (rightFlipper.angle > maxRight) {
-        Body.setAngle(rightFlipper, maxRight);
-        Body.setAngularVelocity(rightFlipper, 0);
-    } else if (rightFlipper.angle < minRight) {
-        Body.setAngle(rightFlipper, minRight);
-        Body.setAngularVelocity(rightFlipper, 0);
-    }
-});
-
 // Add the water can as a static sensor body in the center
 const waterCan = Bodies.rectangle(300, 200, 40, 40, {
     isStatic: true,
@@ -106,34 +57,6 @@ const waterCan = Bodies.rectangle(300, 200, 40, 40, {
     render: { sprite: { texture: '../img/water-can-transparent.png', xScale: 4/40, yScale: 4/40 } }
 });
 Composite.add(world, waterCan);
-
-// Helper to open the modal and trigger confetti
-function showCongratulationsModal() {
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('congratsModal'), { backdrop: 'static', keyboard: true });
-    modal.show();
-    // Trigger confetti
-    if (window.confetti) {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    }
-}
-
-// Only trigger once
-let goalReached = false;
-Events.on(engine, 'collisionStart', function(event) {
-    playRandomWaterDropSound();
-    if (goalReached) return;
-    for (const pair of event.pairs) {
-        if ((pair.bodyA === ball && pair.bodyB === waterCan) || (pair.bodyB === ball && pair.bodyA === waterCan)) {
-            goalReached = true;
-            // Pause physics
-            Runner.stop(runner);
-            showCongratulationsModal();
-            splash = new Audio('../sounds/waterSplashUniversfield.wav')
-            splash.play();
-        }
-    }
-});
 
 // Detect if the ball leaves the canvas (stage) and show failure modal
 Events.on(engine, 'afterUpdate', function() {
@@ -146,61 +69,6 @@ Events.on(engine, 'afterUpdate', function() {
         modal.show();
         goalReached = true;
     }
-});
-
-// Retry button functionality
-document.addEventListener('DOMContentLoaded', function() {
-  function resetGame() {
-    // Reset ball position and velocity
-    Runner.stop(runner);
-    Matter.Body.setPosition(ball, { x: 140, y: 60 });
-    Matter.Body.setVelocity(ball, { x: 0, y: 0 });
-    Matter.Body.setAngularVelocity(ball, 0);
-    // Reset flipper positions and velocities
-    Matter.Body.setAngle(leftFlipper, 0);
-    Matter.Body.setAngularVelocity(leftFlipper, 0);
-    Matter.Body.setAngle(rightFlipper, 0);
-    Matter.Body.setAngularVelocity(rightFlipper, 0);
-    // Reset goal state
-    goalReached = false;
-    // Resume physics
-    Runner.run(runner, engine);
-    // Hide all modals if open
-    ['congratsModal', 'pauseModal', 'failureModal', 'instructionsModal'].forEach(id => {
-      const modalEl = document.getElementById(id);
-      if (modalEl) {
-        const modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-      }
-    });
-  }
-
-  // Retry buttons
-  const retryBtn = document.getElementById('retry-btn');
-  if (retryBtn) retryBtn.addEventListener('click', resetGame);
-  const retryBtnTop = document.getElementById('retry-btn-top');
-  if (retryBtnTop) retryBtnTop.addEventListener('click', resetGame);
-  const retryBtnPause = document.getElementById('retry-btn-pause');
-  if (retryBtnPause) retryBtnPause.addEventListener('click', resetGame);
-  const retryBtnFailure = document.getElementById('retry-btn-failure');
-  if (retryBtnFailure) retryBtnFailure.addEventListener('click', resetGame);
-
-  // Pause button
-  const pauseBtnTop = document.getElementById('pause-btn-top');
-  if (pauseBtnTop) {
-    pauseBtnTop.addEventListener('click', function() {
-      Runner.stop(runner);
-      const modal = new bootstrap.Modal(document.getElementById('pauseModal'), { backdrop: 'static', keyboard: true });
-      modal.show();
-    });
-  }
-
-  // Keyboard shortcut: press 'r' to reset
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'r' || e.key === 'R') {
-      resetGame();
-    }
-  });
 });
 
 // On first load, pause the physics engine until instructionsModal is closed
