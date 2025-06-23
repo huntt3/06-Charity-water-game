@@ -69,6 +69,15 @@
               </label>
               <input type="range" class="form-range" id="sfx-volume" min="0" max="1" step="0.01" value="1" aria-valuetext="Sound effects volume slider">
             </div>
+            <div class="difficulty-toggle d-flex flex-column align-items-center mb-2" style="width: 80%; max-width: 300px;">
+              <label class="form-label d-flex align-items-center gap-2" for="difficulty-switch">
+                <span class="fw-bold">Difficulty:</span>
+                <span id="difficulty-label" class="ms-2">Easy</span>
+              </label>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="difficulty-switch" aria-checked="false" aria-label="Toggle difficulty">
+              </div>
+            </div>
           </div>
           <div class="modal-footer justify-content-center border-0">
             <a href="https://www.charitywater.org/" class="index-btn" target="_blank" rel="noopener noreferrer">Learn more about Charity: Water</a>
@@ -106,7 +115,7 @@
             <button type="button" class="btn-close position-absolute end-0 top-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
-            <p class="fs-5">Press <strong>space</strong> to move flippers.<br> Press <strong>R</strong> to reset the level.<br>The Charity: Water Jerry can is the goal.</p>
+            <p class="fs-5">Press <strong>space</strong> to move flippers.<br> Press <strong>R</strong> to reset the level.<br>The Charity: Water Jerry Can is the goal.</p>
           </div>
         </div>
       </div>
@@ -118,6 +127,7 @@
     <script src="../gameObjects/leftFlipper.js"></script>
     <script src="../gameObjects/rightFlipper.js"></script>
     <script src="../gameObjects/ramp.js"></script>
+    <script src="../gameObjects/waterCan.js"></script>
     <script src="./level1.js"></script>
     <script src="../functionality/flip.js"></script>
     <script src="../functionality/pause.js"></script>
@@ -129,5 +139,6 @@
     <script src="../functionality/drag.js"></script>
     <script src="../functionality/soundMusicControls.js"></script>
     <script src="../functionality/music.js"></script>
+    <script src="../functionality/difficulty.js"></script>
 </body>
 </html>

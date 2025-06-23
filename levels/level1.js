@@ -13,13 +13,9 @@ const ball = Bodies.circle(130, 60, 16, {
 });
 Composite.add(world, ball);
 
-// Add the water can as a static sensor body in the center
-const waterCan = Bodies.rectangle(300, 200, 40, 40, {
-    isStatic: true,
-    isSensor: true, // so the ball passes through
-    render: { sprite: { texture: '../img/water-can-transparent.png', xScale: 4/40, yScale: 4/40 } }
-});
-Composite.add(world, waterCan);
+// Create the water can as an object
+const waterCanObj = new WaterCan(300, 200, 40, 40, world, Matter);
+const waterCan = waterCanObj.body;
 
 // Pause physics engine while instructionsModal is open, resume when closed
 const instructionsModalEl = document.getElementById('instructionsModal');
