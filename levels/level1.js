@@ -60,8 +60,8 @@ const rampEndRightObj = new Ramp(360, 250, 100, 16, -Math.PI / 3, '#4FCB53', wor
 function setWaterCanDifficulty(isHard) {
   // Remove old body from world
   Composite.remove(world, waterCanObj.body);
-  // Set new size (hard = half, easy = normal)
-  let size = isHard ? 40 : 20;
+  // Set new size (hard = 20, easy = 40)
+  let size = isHard ? 20 : 40;
   // Get current position of the can
   const pos = waterCanObj.body.position;
   // Create new body at the same position
@@ -71,8 +71,8 @@ function setWaterCanDifficulty(isHard) {
     render: {
       sprite: {
         texture: '../img/water-can-transparent.png',
-        xScale: size === 40 ? 0.1 : 0.2, // 4/40 = 0.1, 4/20 = 0.2
-        yScale: size === 40 ? 0.1 : 0.2
+        xScale: size / 40 * 0.1, // 0.1 for 40, 0.05 for 20
+        yScale: size / 40 * 0.1
       }
     }
   });
@@ -92,20 +92,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set initial state
     setWaterCanDifficulty(difficultySwitch.checked);
   }
-});
-
-// Make sure to always use window.waterCan in collision checks
-Events.on(engine, 'collisionStart', function(event) {
-    playRandomWaterDropSound();
-    if (goalReached) return;
-    for (const pair of event.pairs) {
-        if ((pair.bodyA === ball && pair.bodyB === window.waterCan) || (pair.bodyB === ball && pair.bodyA === window.waterCan)) {
-            goalReached = true;
-            // Pause physics
-            Runner.stop(runner);
-            showCongratulationsModal();
-            splash = new Audio('../sounds/waterSplashUniversfield.wav')
-            splash.play();
-        }
-    }
 });
